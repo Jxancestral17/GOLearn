@@ -1,4 +1,4 @@
-// Return the Highest and Lowest number, start to array
+
 package main
 
 import (
