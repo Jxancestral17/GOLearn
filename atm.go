@@ -7,6 +7,7 @@ import (
     "time"
     "math/rand"
     "log"
+    //"strconv"
     //"encoding/xml"
 	   //"io/ioutil"
 )
@@ -38,11 +39,11 @@ func CreateANumber()(int){
 
 
 func (a Account)ShowAccount(){
-  fmt.Println("Name: ",a.name)
-  fmt.Println("Surname: ",a.surname)
+  fmt.Println("Nome: ",a.name)
+  fmt.Println("Cognome: ",a.surname)
   fmt.Println("PIN: ", a.pin)
-  fmt.Println("Account Number: ",a.aNumber)
-  fmt.Printf("Balance: %d $\n",a.balance)
+  fmt.Println("Numero Account: ",a.aNumber)
+  fmt.Printf("Bilancio: %d $\n",a.balance)
 
 }
 
@@ -95,21 +96,112 @@ func CreateAccount()(Account){
     return Account{name: name[:len(name)-1], surname: surname[:len(surname)-1], pin: CreatePin(), aNumber: CreateANumber(), balance: 1000}
 }
 
+
+
 func main(){
-
+      // Create two account for testing
       var acc1 = CreateAccount()
-      acc1.ShowAccount()
       var acc2 = CreateAccount()
-      acc2.ShowAccount()
+      r := bufio.NewReader(os.Stdin)
+      for {
+          fmt.Println("---------------------")
+          fmt.Println("1 - Mostra account   ")
+          fmt.Println("2 - Deposito         ")
+          fmt.Println("3 - Ritira           ")
+          fmt.Println("4 - Trasferimento    ")
+          fmt.Println("5 - Esci             ")
+          fmt.Println("---------------------")
+          scelta, err := r.ReadString('\n')
+          if err != nil {
+            log.Fatal(err)
+          }
+          switch scelta[:len(scelta)-1]{
 
-      acc1, acc2 = Transfert(acc1, acc2, 100)
-      acc2.ShowAccount()
-      acc1 = Deposit(acc1, 20000)
-      acc1 = Withdraw(acc1, 19000)
-      acc1.ShowAccount()
+          case "1":
+            fmt.Printf("1 - Account %s %s \n", acc1.name, acc1.surname)
+            fmt.Printf("2 - Account %s %s \n", acc2.name, acc2.surname)
+            n, err := r.ReadString('\n')
+            if err != nil{
+              log.Fatal(err)
+            }
+            if n[:len(n)-1] == "1"{
+              acc1.ShowAccount()
+            }else if n[:len(n)-1] == "2" {
+              acc2.ShowAccount()
+            }else{
+              fmt.Println("Account non esiste")
+            }
+          case "2":
+            fmt.Printf("1 - Account %s %s \n", acc1.name, acc1.surname)
+            fmt.Printf("2 - Account %s %s \n", acc2.name, acc2.surname)
+            n, err := r.ReadString('\n')
+            if err != nil{
+              log.Fatal(err)
+            }
+            if n[:len(n)-1] == "1"{
+              fmt.Println("Quanto vuoi depositare? ")
+              var amount int
+              _, err := fmt.Scanf("%d",&amount)
+              if err != nil{
+                log.Fatal(err)
+              }
+              acc1 = Deposit(acc1, amount)
+            }else if n[:len(n)-1] == "2" {
+              fmt.Println("Quanto vuoi depositare? ")
+              var amount int
+              _, err := fmt.Scanf("%d",&amount)
+              if err != nil{
+                log.Fatal(err)
+              }
+              acc2 = Deposit(acc2, amount)
+            }else{
+              fmt.Println("Account non esiste")
+            }
+          case "3":
+            fmt.Printf("1 - Account %s %s \n", acc1.name, acc1.surname)
+            fmt.Printf("2 - Account %s %s \n", acc2.name, acc2.surname)
+            n, err := r.ReadString('\n')
+            if err != nil{
+              log.Fatal(err)
+            }
+            if n[:len(n)-1] == "1"{
+              fmt.Println("Quanto vuoi depositare? ")
+              var amount int
+              _, err := fmt.Scanf("%d",&amount)
+              if err != nil{
+                log.Fatal(err)
+              }
+              acc1 = Withdraw(acc1, amount)
+            }else if n[:len(n)-1] == "2" {
+              fmt.Println("Quanto vuoi depositare? ")
+              var amount int
+              _, err := fmt.Scanf("%d",&amount)
+              if err != nil{
+                log.Fatal(err)
+              }
+              acc2 = Withdraw(acc2, amount)
+            }else{
+              fmt.Println("Account non esiste")
+            }
+          case "4":
+            fmt.Println("Quanto vuoi trasferire? ")
+            var amount int
+            _, err := fmt.Scanf("%d",&amount)
+            if err != nil{
+              log.Fatal(err)
+            }
+            acc1, acc2 = Transfert(acc1, acc2, amount)
+          case "5":
+            os.Exit(3)
+          default:
+            fmt.Println("Il comando non esiste")
+          }
+      }
+
 
 
 
 
 
 }
+
